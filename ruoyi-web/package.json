@@ -2,8 +2,6 @@
   "name": "ruoyi-vue-plus",
   "version": "5.2.0-BETA",
   "description": "RuoYi-Vue-Plus多租户管理系统",
-  "author": "LionLi",
-  "license": "MIT",
   "type": "module",
   "scripts": {
     "dev": "vite serve --mode development",
@@ -12,10 +10,6 @@
     "preview": "vite preview",
     "lint:eslint": "eslint  --fix --ext .ts,.js,.vue ./src ",
     "prettier": "prettier --write ."
-  },
-  "repository": {
-    "type": "git",
-    "url": "https://gitee.com/JavaLionLi/plus-ui.git"
   },
   "dependencies": {
     "@element-plus/icons-vue": "2.3.1",
