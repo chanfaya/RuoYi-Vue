@@ -19,9 +19,6 @@ import org.dromara.common.core.utils.*;
 import org.dromara.common.encrypt.annotation.ApiEncrypt;
 import org.dromara.common.json.utils.JsonUtils;
 import org.dromara.common.satoken.utils.LoginHelper;
-import org.dromara.common.social.config.properties.SocialLoginConfigProperties;
-import org.dromara.common.social.config.properties.SocialProperties;
-import org.dromara.common.social.utils.SocialUtils;
 import org.dromara.common.tenant.helper.TenantHelper;
 import org.dromara.common.websocket.dto.WebSocketMessageDto;
 import org.dromara.common.websocket.utils.WebSocketUtils;
@@ -58,7 +55,6 @@ import java.util.concurrent.TimeUnit;
 @RequestMapping("/auth")
 public class AuthController {
 
-    private final SocialProperties socialProperties;
     private final SysLoginService loginService;
     private final SysRegisterService registerService;
     private final ISysConfigService configService;
@@ -103,44 +99,6 @@ public class AuthController {
             WebSocketUtils.publishMessage(dto);
         }, 3, TimeUnit.SECONDS);
         return R.ok(loginVo);
-    }
-
-    /**
-     * 第三方登录请求
-     *
-     * @param source 登录来源
-     * @return 结果
-     */
-    @GetMapping("/binding/{source}")
-    public R<String> authBinding(@PathVariable("source") String source) {
-        SocialLoginConfigProperties obj = socialProperties.getType().get(source);
-        if (ObjectUtil.isNull(obj)) {
-            return R.fail(source + "平台账号暂不支持");
-        }
-        AuthRequest authRequest = SocialUtils.getAuthRequest(source, socialProperties);
-        String authorizeUrl = authRequest.authorize(AuthStateUtils.createState());
-        return R.ok("操作成功", authorizeUrl);
-    }
-
-    /**
-     * 第三方登录回调业务处理 绑定授权
-     *
-     * @param loginBody 请求体
-     * @return 结果
-     */
-    @PostMapping("/social/callback")
-    public R<Void> socialCallback(@RequestBody SocialLoginBody loginBody) {
-        // 获取第三方登录信息
-        AuthResponse<AuthUser> response = SocialUtils.loginAuth(
-                loginBody.getSource(), loginBody.getSocialCode(),
-                loginBody.getSocialState(), socialProperties);
-        AuthUser authUserData = response.getData();
-        // 判断授权响应是否成功
-        if (!response.ok()) {
-            return R.fail(response.getMsg());
-        }
-        loginService.socialRegister(authUserData);
-        return R.ok();
     }
 
 

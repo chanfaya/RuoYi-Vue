@@ -13,7 +13,6 @@ import org.dromara.common.core.utils.SpringUtils;
 import org.dromara.common.core.utils.StreamUtils;
 import org.dromara.common.core.utils.StringUtils;
 import org.dromara.common.core.utils.reflect.ReflectUtils;
-import org.dromara.common.mail.utils.MailUtils;
 import org.dromara.common.tenant.helper.TenantHelper;
 import org.dromara.common.websocket.dto.WebSocketMessageDto;
 import org.dromara.common.websocket.utils.WebSocketUtils;
@@ -328,12 +327,6 @@ public class WorkflowUtils {
                             dto.setSessionKeys(new ArrayList<>(userIds));
                             dto.setMessage(message);
                             WebSocketUtils.publishMessage(dto);
-                            break;
-                        case EMAIL_MESSAGE:
-                            MailUtils.sendText(StreamUtils.join(userList, UserDTO::getEmail), "单据审批提醒", message);
-                            break;
-                        case SMS_MESSAGE:
-                            //todo 短信发送
                             break;
                     }
                 }
