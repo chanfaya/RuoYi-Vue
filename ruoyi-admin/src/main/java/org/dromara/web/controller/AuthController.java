@@ -6,15 +6,10 @@ import cn.hutool.core.util.ObjectUtil;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import me.zhyd.oauth.model.AuthResponse;
-import me.zhyd.oauth.model.AuthUser;
-import me.zhyd.oauth.request.AuthRequest;
-import me.zhyd.oauth.utils.AuthStateUtils;
 import org.dromara.common.core.constant.UserConstants;
 import org.dromara.common.core.domain.R;
 import org.dromara.common.core.domain.model.LoginBody;
 import org.dromara.common.core.domain.model.RegisterBody;
-import org.dromara.common.core.domain.model.SocialLoginBody;
 import org.dromara.common.core.utils.*;
 import org.dromara.common.encrypt.annotation.ApiEncrypt;
 import org.dromara.common.json.utils.JsonUtils;
@@ -27,7 +22,6 @@ import org.dromara.system.domain.vo.SysClientVo;
 import org.dromara.system.domain.vo.SysTenantVo;
 import org.dromara.system.service.ISysClientService;
 import org.dromara.system.service.ISysConfigService;
-import org.dromara.system.service.ISysSocialService;
 import org.dromara.system.service.ISysTenantService;
 import org.dromara.web.domain.vo.LoginTenantVo;
 import org.dromara.web.domain.vo.LoginVo;
@@ -59,7 +53,6 @@ public class AuthController {
     private final SysRegisterService registerService;
     private final ISysConfigService configService;
     private final ISysTenantService tenantService;
-    private final ISysSocialService socialUserService;
     private final ISysClientService clientService;
     private final ScheduledExecutorService scheduledExecutorService;
 
@@ -99,18 +92,6 @@ public class AuthController {
             WebSocketUtils.publishMessage(dto);
         }, 3, TimeUnit.SECONDS);
         return R.ok(loginVo);
-    }
-
-
-    /**
-     * 取消授权
-     *
-     * @param socialId socialId
-     */
-    @DeleteMapping(value = "/unlock/{socialId}")
-    public R<Void> unlockSocial(@PathVariable Long socialId) {
-        Boolean rows = socialUserService.deleteWithValidById(socialId);
-        return rows ? R.ok() : R.fail("取消授权失败");
     }
 
 

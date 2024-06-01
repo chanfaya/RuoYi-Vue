@@ -18,122 +18,122 @@
  * @param {number} socketError 错误次数
  */
 
-import { getToken } from '@/utils/auth';
-import { ElNotification } from 'element-plus';
-import useNoticeStore from '@/store/modules/notice';
+import { getToken } from '@/utils/auth'
+import { ElNotification } from 'element-plus'
+import useNoticeStore from '@/store/modules/notice'
 
-let socketUrl: any = ''; // socket地址
-let websocket: any = null; // websocket 实例
-let heartTime: any = null; // 心跳定时器实例
-let socketHeart = 0 as number; // 心跳次数
-const HeartTimeOut = 10000; // 心跳超时时间 10000 = 10s
-let socketError = 0 as number; // 错误次数
+let socketUrl: any = '' // socket地址
+let websocket: any = null // websocket 实例
+let heartTime: any = null // 心跳定时器实例
+let socketHeart = 0 as number // 心跳次数
+const HeartTimeOut = 10000 // 心跳超时时间 10000 = 10s
+let socketError = 0 as number // 错误次数
 
 // 初始化socket
 export const initWebSocket = (url: any) => {
-  if (import.meta.env.VITE_APP_WEBSOCKET === 'false') {
-    return;
-  }
-  socketUrl = url;
-  // 初始化 websocket
-  websocket = new WebSocket(url + '?Authorization=Bearer ' + getToken() + '&clientid=' + import.meta.env.VITE_APP_CLIENT_ID);
-  websocketonopen();
-  websocketonmessage();
-  websocketonerror();
-  websocketclose();
-  sendSocketHeart();
-  return websocket;
-};
+    if (import.meta.env.VITE_APP_WEBSOCKET === 'false') {
+        return
+    }
+    socketUrl = url
+    // 初始化 websocket
+    websocket = new WebSocket(url + '?Authorization=Bearer ' + getToken() + '&clientid=' + import.meta.env.VITE_APP_CLIENT_ID)
+    websocketonopen()
+    websocketonmessage()
+    websocketonerror()
+    websocketclose()
+    sendSocketHeart()
+    return websocket
+}
 
 // socket 连接成功
 export const websocketonopen = () => {
-  websocket.onopen = function () {
-    console.log('连接 websocket 成功');
-    resetHeart();
-  };
-};
+    websocket.onopen = function () {
+        console.log('连接 websocket 成功')
+        resetHeart()
+    }
+}
 
 // socket 连接失败
 export const websocketonerror = () => {
-  websocket.onerror = function (e: any) {
-    console.log('连接 websocket 失败', e);
-  };
-};
+    websocket.onerror = function (e: any) {
+        console.log('连接 websocket 失败', e)
+    }
+}
 
 // socket 断开链接
 export const websocketclose = () => {
-  websocket.onclose = function (e: any) {
-    console.log('断开连接', e);
-  };
-};
+    websocket.onclose = function (e: any) {
+        console.log('断开连接', e)
+    }
+}
 
 // socket 重置心跳
 export const resetHeart = () => {
-  socketHeart = 0;
-  socketError = 0;
-  clearInterval(heartTime);
-  sendSocketHeart();
-};
+    socketHeart = 0
+    socketError = 0
+    clearInterval(heartTime)
+    sendSocketHeart()
+}
 
 // socket心跳发送
 export const sendSocketHeart = () => {
-  heartTime = setInterval(() => {
-    // 如果连接正常则发送心跳
-    if (websocket.readyState == 1) {
-      // if (socketHeart <= 30) {
-      websocket.send(
-        JSON.stringify({
-          type: 'ping'
-        })
-      );
-      socketHeart = socketHeart + 1;
-    } else {
-      // 重连
-      reconnect();
-    }
-  }, HeartTimeOut);
-};
+    heartTime = setInterval(() => {
+        // 如果连接正常则发送心跳
+        if (websocket.readyState == 1) {
+            // if (socketHeart <= 30) {
+            websocket.send(
+                JSON.stringify({
+                    type: 'ping'
+                })
+            )
+            socketHeart = socketHeart + 1
+        } else {
+            // 重连
+            reconnect()
+        }
+    }, HeartTimeOut)
+}
 
 // socket重连
 export const reconnect = () => {
-  if (socketError <= 2) {
-    clearInterval(heartTime);
-    initWebSocket(socketUrl);
-    socketError = socketError + 1;
-    // eslint-disable-next-line prettier/prettier
-    console.log('socket重连', socketError);
-  } else {
-    // eslint-disable-next-line prettier/prettier
-    console.log('重试次数已用完');
-    clearInterval(heartTime);
-  }
-};
+    if (socketError <= 2) {
+        clearInterval(heartTime)
+        initWebSocket(socketUrl)
+        socketError = socketError + 1
+        // eslint-disable-next-line prettier/prettier
+        console.log('socket重连', socketError)
+    } else {
+        // eslint-disable-next-line prettier/prettier
+        console.log('重试次数已用完')
+        clearInterval(heartTime)
+    }
+}
 
 // socket 发送数据
 export const sendMsg = (data: any) => {
-  websocket.send(data);
-};
+    websocket.send(data)
+}
 
 // socket 接收数据
 export const websocketonmessage = () => {
-  websocket.onmessage = function (e: any) {
-    if (e.data.indexOf('heartbeat') > 0) {
-      resetHeart();
+    websocket.onmessage = function (e: any) {
+        if (e.data.indexOf('heartbeat') > 0) {
+            resetHeart()
+        }
+        if (e.data.indexOf('ping') > 0) {
+            return
+        }
+        useNoticeStore().addNotice({
+            message: e.data,
+            read: false,
+            time: new Date().toLocaleString()
+        })
+        ElNotification({
+            title: '消息',
+            message: e.data,
+            type: 'success',
+            duration: 3000
+        })
+        return e.data
     }
-    if (e.data.indexOf('ping') > 0) {
-      return;
-    }
-    useNoticeStore().addNotice({
-      message: e.data,
-      read: false,
-      time: new Date().toLocaleString()
-    });
-    ElNotification({
-      title: '消息',
-      message: e.data,
-      type: 'success',
-      duration: 3000
-    });
-    return e.data;
-  };
-};
+}

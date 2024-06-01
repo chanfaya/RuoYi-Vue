@@ -3,7 +3,7 @@
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <parent>
-        <artifactId>ruoyi-vue-plus</artifactId>
+        <artifactId>ruoyi-vue</artifactId>
         <groupId>org.dromara</groupId>
         <version>${revision}</version>
     </parent>
@@ -53,11 +53,6 @@
             <artifactId>ruoyi-system</artifactId>
         </dependency>
 
-        <dependency>
-            <groupId>org.dromara</groupId>
-            <artifactId>ruoyi-job</artifactId>
-        </dependency>
-
         <!-- 代码生成-->
         <dependency>
             <groupId>org.dromara</groupId>
@@ -70,11 +65,7 @@
             <artifactId>ruoyi-demo</artifactId>
         </dependency>
 
-        <!--  工作流模块  -->
-        <dependency>
-            <groupId>org.dromara</groupId>
-            <artifactId>ruoyi-workflow</artifactId>
-        </dependency>
+
 
         <dependency>
             <groupId>de.codecentric</groupId>
@@ -92,15 +83,6 @@
             <artifactId>JustAuth</artifactId>
         </dependency>
 
-        <!-- SnailJob client -->
-        <dependency>
-            <groupId>com.aizuda</groupId>
-            <artifactId>snail-job-client-starter</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>com.aizuda</groupId>
-            <artifactId>snail-job-client-job-core</artifactId>
-        </dependency>
 
         <!-- skywalking 整合 logback -->
 <!--        <dependency>-->

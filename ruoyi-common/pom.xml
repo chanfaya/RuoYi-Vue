@@ -3,7 +3,7 @@
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <parent>
-        <artifactId>ruoyi-vue-plus</artifactId>
+        <artifactId>ruoyi-vue</artifactId>
         <groupId>org.dromara</groupId>
         <version>${revision}</version>
     </parent>
@@ -15,7 +15,6 @@
         <module>ruoyi-common-doc</module>
         <module>ruoyi-common-excel</module>
         <module>ruoyi-common-idempotent</module>
-        <module>ruoyi-common-job</module>
         <module>ruoyi-common-log</module>
         <module>ruoyi-common-mybatis</module>
         <module>ruoyi-common-oss</module>

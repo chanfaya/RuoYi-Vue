@@ -1,26 +1,26 @@
-import { CSSProperties } from 'vue';
-import VueTypes, { createTypes, toValidableType, VueTypeValidableDef, VueTypesInterface } from 'vue-types';
+import { CSSProperties } from 'vue'
+import VueTypes, { createTypes, toValidableType, VueTypeValidableDef, VueTypesInterface } from 'vue-types'
 
 type PropTypes = VueTypesInterface & {
-  readonly style: VueTypeValidableDef<CSSProperties>;
-  readonly fieldOption: VueTypeValidableDef<Array<FieldOption>>;
-};
+    readonly style: VueTypeValidableDef<CSSProperties>
+    readonly fieldOption: VueTypeValidableDef<Array<FieldOption>>
+}
 
 const propTypes = createTypes({
-  func: undefined,
-  bool: undefined,
-  string: undefined,
-  number: undefined,
-  object: undefined,
-  integer: undefined
-}) as PropTypes;
+    func: undefined,
+    bool: undefined,
+    string: undefined,
+    number: undefined,
+    object: undefined,
+    integer: undefined
+}) as PropTypes
 
 export default class ProjectTypes extends VueTypes {
-  static get style() {
-    return toValidableType('style', {
-      type: [String, Object],
-      default: undefined
-    });
-  }
+    static get style() {
+        return toValidableType('style', {
+            type: [String, Object],
+            default: undefined
+        })
+    }
 }
-export { propTypes };
+export { propTypes }

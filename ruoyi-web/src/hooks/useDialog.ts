@@ -1,31 +1,31 @@
-import { Ref } from 'vue';
+import { Ref } from 'vue'
 
 interface Options {
-  title?: string;
+    title?: string
 }
 interface Return {
-  title: Ref<string>;
-  visible: Ref<boolean>;
-  openDialog: () => void;
-  closeDialog: () => void;
+    title: Ref<string>
+    visible: Ref<boolean>
+    openDialog: () => void
+    closeDialog: () => void
 }
 export default (ops?: Options): Return => {
-  const visible = ref(false);
-  const title = ref(ops.title || '');
+    const visible = ref(false)
+    const title = ref(ops.title || '')
 
-  const openDialog = () => {
-    visible.value = true;
-  };
+    const openDialog = () => {
+        visible.value = true
+    }
 
-  const closeDialog = () => {
-    visible.value = false;
-  };
+    const closeDialog = () => {
+        visible.value = false
+    }
 
-  return {
-    title,
-    visible,
+    return {
+        title,
+        visible,
 
-    openDialog,
-    closeDialog
-  };
-};
+        openDialog,
+        closeDialog
+    }
+}
