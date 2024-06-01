@@ -16,22 +16,7 @@ public enum DeviceType {
     /**
      * pc端
      */
-    PC("pc"),
-
-    /**
-     * app端
-     */
-    APP("app"),
-
-    /**
-     * 小程序端
-     */
-    XCX("xcx"),
-
-    /**
-     * social第三方端
-     */
-    SOCIAL("social");
+    PC("pc");
 
     private final String device;
 }

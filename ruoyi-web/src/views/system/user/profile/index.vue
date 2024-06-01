@@ -72,9 +72,7 @@
 import UserAvatar from './userAvatar.vue'
 import UserInfo from './userInfo.vue'
 import ResetPwd from './resetPwd.vue'
-import ThirdParty from './thirdParty.vue'
 import OnlinDevice from './onlineDevice.vue'
-import { getAuthList } from '@/api/system/social/auth'
 import { getUserProfile } from '@/api/system/user'
 import { getOnline } from '@/api/monitor/online'
 import { UserVO } from '@/api/system/user/types'
@@ -105,10 +103,7 @@ const getUser = async () => {
     state.value.postGroup = res.data.postGroup
 }
 
-const getAuths = async () => {
-    const res = await getAuthList()
-    state.value.auths = res.data
-}
+
 const getOnlines = async () => {
     const res = await getOnline()
     state.value.devices = res.rows
@@ -116,7 +111,6 @@ const getOnlines = async () => {
 
 onMounted(() => {
     getUser()
-    getAuths()
     getOnlines()
 })
 </script>
