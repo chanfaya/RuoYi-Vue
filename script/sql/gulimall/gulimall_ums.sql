@@ -38,7 +38,7 @@ CREATE TABLE `ums_growth_change_history` (
 -- ----------------------------
 DROP TABLE IF EXISTS `ums_integration_change_history`;
 CREATE TABLE `ums_integration_change_history` (
-  `id` bigint(20) NOT NULL AUTO_INCREMENT COMMENT 'id',
+  `id` bigint(20) NOT NULL ,
   `member_id` bigint(20) DEFAULT NULL COMMENT 'member_id',
   `create_time` datetime DEFAULT NULL COMMENT 'create_time',
   `change_count` int(11) DEFAULT NULL COMMENT '变化的值',
@@ -56,7 +56,7 @@ CREATE TABLE `ums_integration_change_history` (
 -- ----------------------------
 DROP TABLE IF EXISTS `ums_member`;
 CREATE TABLE `ums_member` (
-  `id` bigint(20) NOT NULL AUTO_INCREMENT COMMENT 'id',
+  `id` bigint(20) NOT NULL ,
   `level_id` bigint(20) DEFAULT NULL COMMENT '会员等级id',
   `username` char(64) DEFAULT NULL COMMENT '用户名',
   `password` varchar(64) DEFAULT NULL COMMENT '密码',
@@ -107,7 +107,7 @@ CREATE TABLE `ums_member_collect_spu` (
 -- ----------------------------
 DROP TABLE IF EXISTS `ums_member_collect_subject`;
 CREATE TABLE `ums_member_collect_subject` (
-  `id` bigint(20) NOT NULL AUTO_INCREMENT COMMENT 'id',
+  `id` bigint(20) NOT NULL ,
   `subject_id` bigint(20) DEFAULT NULL COMMENT 'subject_id',
   `subject_name` varchar(255) DEFAULT NULL COMMENT 'subject_name',
   `subject_img` varchar(500) DEFAULT NULL COMMENT 'subject_img',
@@ -124,7 +124,7 @@ CREATE TABLE `ums_member_collect_subject` (
 -- ----------------------------
 DROP TABLE IF EXISTS `ums_member_level`;
 CREATE TABLE `ums_member_level` (
-  `id` bigint(20) NOT NULL AUTO_INCREMENT COMMENT 'id',
+  `id` bigint(20) NOT NULL ,
   `name` varchar(100) DEFAULT NULL COMMENT '等级名称',
   `growth_point` int(11) DEFAULT NULL COMMENT '等级需要的成长值',
   `default_status` tinyint(4) DEFAULT NULL COMMENT '是否为默认等级[0->不是；1->是]',
@@ -146,7 +146,7 @@ CREATE TABLE `ums_member_level` (
 -- ----------------------------
 DROP TABLE IF EXISTS `ums_member_login_log`;
 CREATE TABLE `ums_member_login_log` (
-  `id` bigint(20) NOT NULL AUTO_INCREMENT COMMENT 'id',
+  `id` bigint(20) NOT NULL ,
   `member_id` bigint(20) DEFAULT NULL COMMENT 'member_id',
   `create_time` datetime DEFAULT NULL COMMENT '创建时间',
   `ip` varchar(64) DEFAULT NULL COMMENT 'ip',
@@ -164,7 +164,7 @@ CREATE TABLE `ums_member_login_log` (
 -- ----------------------------
 DROP TABLE IF EXISTS `ums_member_receive_address`;
 CREATE TABLE `ums_member_receive_address` (
-  `id` bigint(20) NOT NULL AUTO_INCREMENT COMMENT 'id',
+  `id` bigint(20) NOT NULL ,
   `member_id` bigint(20) DEFAULT NULL COMMENT 'member_id',
   `name` varchar(255) DEFAULT NULL COMMENT '收货人姓名',
   `phone` varchar(64) DEFAULT NULL COMMENT '电话',
@@ -187,7 +187,7 @@ CREATE TABLE `ums_member_receive_address` (
 -- ----------------------------
 DROP TABLE IF EXISTS `ums_member_statistics_info`;
 CREATE TABLE `ums_member_statistics_info` (
-  `id` bigint(20) NOT NULL AUTO_INCREMENT COMMENT 'id',
+  `id` bigint(20) NOT NULL ,
   `member_id` bigint(20) DEFAULT NULL COMMENT '会员id',
   `consume_amount` decimal(18,4) DEFAULT NULL COMMENT '累计消费金额',
   `coupon_amount` decimal(18,4) DEFAULT NULL COMMENT '累计优惠金额',
