@@ -61,6 +61,13 @@
                 <version>${revision}</version>
             </dependency>
 
+            <!-- mq 消息队列 -->
+            <dependency>
+                <groupId>org.dromara</groupId>
+                <artifactId>ruoyi-common-mq</artifactId>
+                <version>${revision}</version>
+            </dependency>
+
             <!-- OSS -->
             <dependency>
                 <groupId>org.dromara</groupId>

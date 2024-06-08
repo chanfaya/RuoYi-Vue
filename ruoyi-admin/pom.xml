@@ -65,6 +65,11 @@
             <artifactId>ruoyi-demo</artifactId>
         </dependency>
 
+        <!--  demo模块  -->
+        <dependency>
+            <groupId>org.dromara</groupId>
+            <artifactId>ruoyi-mall</artifactId>
+        </dependency>
 
 
         <dependency>

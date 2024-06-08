@@ -126,12 +126,13 @@ tenant:
     - sys_user_role
     - sys_client
     - sys_oss_config
+    - pms_brand
 
 # MyBatisPlus配置
 # https://baomidou.com/config/
 mybatis-plus:
   # 多包名使用 例如 org.dromara.**.mapper,org.xxx.**.mapper
-  mapperPackage: org.dromara.**.mapper
+  mapperPackage: org.dromara.*.**.mapper
   # 对应的 XML 文件位置
   mapperLocations: classpath*:mapper/**/*Mapper.xml
   # 实体扫描，多个package用逗号或者分号分隔
