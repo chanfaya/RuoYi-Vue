@@ -1,33 +1,5 @@
 <template>
   <div class="p-2">
-    <transition :enter-active-class="proxy?.animate.searchAnimate.enter" :leave-active-class="proxy?.animate.searchAnimate.leave">
-      <div v-show="showSearch" class="mb-[10px]">
-        <el-card shadow="hover">
-          <el-form ref="queryFormRef" :model="queryParams" :inline="true">
-            <el-form-item label="品牌名" prop="name">
-              <el-input v-model="queryParams.name" placeholder="请输入品牌名" clearable @keyup.enter="handleQuery" />
-            </el-form-item>
-            <el-form-item label="品牌logo地址" prop="logo">
-              <el-input v-model="queryParams.logo" placeholder="请输入品牌logo地址" clearable @keyup.enter="handleQuery" />
-            </el-form-item>
-            <el-form-item label="介绍" prop="descript">
-              <el-input v-model="queryParams.descript" placeholder="请输入介绍" clearable @keyup.enter="handleQuery" />
-            </el-form-item>
-            <el-form-item label="检索首字母" prop="firstLetter">
-              <el-input v-model="queryParams.firstLetter" placeholder="请输入检索首字母" clearable @keyup.enter="handleQuery" />
-            </el-form-item>
-            <el-form-item label="排序" prop="sort">
-              <el-input v-model="queryParams.sort" placeholder="请输入排序" clearable @keyup.enter="handleQuery" />
-            </el-form-item>
-            <el-form-item>
-              <el-button type="primary" icon="Search" @click="handleQuery">搜索</el-button>
-              <el-button icon="Refresh" @click="resetQuery">重置</el-button>
-            </el-form-item>
-          </el-form>
-        </el-card>
-      </div>
-    </transition>
-
     <el-card shadow="never">
       <template #header>
         <el-row :gutter="10" class="mb8">
@@ -40,9 +12,6 @@
           <el-col :span="1.5">
             <el-button type="danger" plain icon="Delete" :disabled="multiple" @click="handleDelete()" v-hasPermi="['pms:brand:remove']">删除</el-button>
           </el-col>
-          <el-col :span="1.5">
-            <el-button type="warning" plain icon="Download" @click="handleExport" v-hasPermi="['pms:brand:export']">导出</el-button>
-          </el-col>
           <right-toolbar v-model:showSearch="showSearch" @queryTable="getList"></right-toolbar>
         </el-row>
       </template>
@@ -51,11 +20,9 @@
         <el-table-column type="selection" width="55" align="center" />
         <el-table-column label="品牌id" align="center" prop="brandId" v-if="true" />
         <el-table-column label="品牌名" align="center" prop="name" />
-        <el-table-column label="品牌logo地址" align="center" prop="logo" />
         <el-table-column label="介绍" align="center" prop="descript" />
-        <el-table-column label="显示状态[0-不显示；1-显示]" align="center" prop="showStatus" />
+        <el-table-column label="显示状态" align="center" prop="showStatus" />
         <el-table-column label="检索首字母" align="center" prop="firstLetter" />
-        <el-table-column label="排序" align="center" prop="sort" />
         <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
           <template #default="scope">
             <el-tooltip content="修改" placement="top">
@@ -71,20 +38,20 @@
       <pagination v-show="total > 0" :total="total" v-model:page="queryParams.pageNum" v-model:limit="queryParams.pageSize" @pagination="getList" />
     </el-card>
     <!-- 添加或修改品牌对话框 -->
-    <el-dialog :title="dialog.title" v-model="dialog.visible" width="500px" append-to-body>
-      <el-form ref="brandFormRef" :model="form" :rules="rules" label-width="80px">
-        <el-form-item label="品牌名" prop="name">
+    <el-dialog :title="dialog.title" v-model="dialog.visible" width="600px" append-to-body>
+      <el-form ref="brandFormRef" :model="form" :rules="rules" label-width="100px">
+        <el-form-item label="名称" prop="name">
           <el-input v-model="form.name" placeholder="请输入品牌名" />
         </el-form-item>
-        <el-form-item label="品牌logo地址" prop="logo">
-            <el-input v-model="form.logo" type="textarea" placeholder="请输入内容" />
-        </el-form-item>
-        <el-form-item label="介绍" prop="descript">
-            <el-input v-model="form.descript" type="textarea" placeholder="请输入内容" />
-        </el-form-item>
-        <el-form-item label="检索首字母" prop="firstLetter">
+        <el-form-item label="首字母" prop="firstLetter">
           <el-input v-model="form.firstLetter" placeholder="请输入检索首字母" />
         </el-form-item>
+          <el-form-item label="LOGO" prop="name">
+              <el-input v-model="form.logo" placeholder="请输入logo" />
+          </el-form-item>
+          <el-form-item label="介绍" prop="descript">
+              <el-input v-model="form.descript" type="textarea" placeholder="请输入内容" />
+          </el-form-item>
         <el-form-item label="排序" prop="sort">
           <el-input v-model="form.sort" placeholder="请输入排序" />
         </el-form-item>
@@ -253,13 +220,6 @@ const handleDelete = async (row?: BrandVO) => {
   await delBrand(_brandIds);
   proxy?.$modal.msgSuccess("删除成功");
   await getList();
-}
-
-/** 导出按钮操作 */
-const handleExport = () => {
-  proxy?.download('pms/brand/export', {
-    ...queryParams.value
-  }, `brand_${new Date().getTime()}.xlsx`)
 }
 
 onMounted(() => {
