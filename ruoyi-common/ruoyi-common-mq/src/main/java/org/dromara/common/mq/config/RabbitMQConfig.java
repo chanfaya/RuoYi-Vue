@@ -28,7 +28,7 @@ public class RabbitMQConfig {
     public AmqpTemplate amqpTemplate(){
         Logger LOG = LoggerFactory.getLogger(AmqpTemplate.class);
         //使用jackson 消息转换器(发送对象时候才开启)
-        rabbitTemplate.setMessageConverter(new Jackson2JsonMessageConverter());
+//        rabbitTemplate.setMessageConverter(new Jackson2JsonMessageConverter());
         rabbitTemplate.setEncoding("UTF-8");
         rabbitTemplate.setMandatory(true);
         // 开启returncallback    yml 需要配置publisher-returns: true
@@ -51,14 +51,14 @@ public class RabbitMQConfig {
      * 声明直连交换机 支持持久化.
      * @return the exchange
      */
-    @Bean
+    @Bean("orderDirect")
     public DirectExchange  directExchange() {
         return ExchangeBuilder.directExchange(QueueEnum.QUEUE_ORDER_CANCEL.getExchange()).durable(true).build();
     }
 
-    @Bean
+    @Bean("orderQueue")
     public Queue directQueue(){
-        return new Queue(QueueEnum.QUEUE_ORDER_CANCEL.getName(), true, true, true);
+        return new Queue(QueueEnum.QUEUE_ORDER_CANCEL.getName(), true, false, false);
     }
 
     @Bean
@@ -67,5 +67,34 @@ public class RabbitMQConfig {
             .bind(orderQueue)
             .to(orderDirect)
             .with(QueueEnum.QUEUE_ORDER_CANCEL.getRouteKey());
+    }
+
+    // 订阅模式
+    @Bean("fanoutQueueA")
+    public Queue fanoutExchangeQueueA(){
+        return new Queue(QueueEnum.QUEUE_ORDER_FANOUTA.getName(), true, false, false);
+    }
+
+    @Bean("fanoutQueueB")
+    public Queue fanoutExchangeQueueB(){
+        return new Queue(QueueEnum.QUEUE_ORDER_FANOUTB.getName(), true, false, false);
+    }
+
+    @Bean
+    public FanoutExchange rabbitmqDemoFanoutExchange() {
+        //创建FanoutExchange类型交换机
+        return new FanoutExchange(QueueEnum.QUEUE_ORDER_FANOUTA.getExchange(), true, false);
+    }
+
+    @Bean
+    public Binding bindFanoutA(FanoutExchange fanoutExchange, Queue fanoutQueueA) {
+        //队列A绑定到FanoutExchange交换机
+        return BindingBuilder.bind(fanoutQueueA).to(fanoutExchange);
+    }
+
+    @Bean
+    public Binding bindFanoutB(FanoutExchange fanoutExchange, Queue fanoutQueueB) {
+        //队列B绑定到FanoutExchange交换机
+        return BindingBuilder.bind(fanoutQueueB).to(fanoutExchange);
     }
 }

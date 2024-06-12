@@ -5,9 +5,13 @@ import lombok.Getter;
 @Getter
 public enum QueueEnum {
     /**
-     * 消息通知队列
+     * 订单取消
      */
-    QUEUE_ORDER_CANCEL("mall.order.direct", "mall.order.cancel", "mall.order.cancel");
+    QUEUE_ORDER_CANCEL("mall.order.direct", "mall.order.cancel", "mall.order.cancel"),
+    QUEUE_ORDER_FANOUTA("mall.order. fanout", "mall.order. fanoutA", "mall.order. fanout"),
+    QUEUE_ORDER_FANOUTB("mall.order.fanout", "mall.order.fanoutB", "mall.order.fanout")
+
+    ;
 
     /**
      * 交换名称

@@ -23,7 +23,9 @@ public class DirectSender {
         String date = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date());
         String content = i+":hello!"+date;
         CorrelationData correlationData = new CorrelationData(UUID.randomUUID().toString());
-        LOG.info("class:{},message:{}","DirectSender",content);
+        LOG.info("111class:{},message:{}","DirectSender",content);
         rabbitTemplate.convertAndSend(QueueEnum.QUEUE_ORDER_CANCEL.getExchange(),QueueEnum.QUEUE_ORDER_CANCEL.getRouteKey(),content,correlationData);
+
+        rabbitTemplate.convertAndSend(QueueEnum.QUEUE_ORDER_FANOUTA.getExchange(), "", content);
     }
 }
