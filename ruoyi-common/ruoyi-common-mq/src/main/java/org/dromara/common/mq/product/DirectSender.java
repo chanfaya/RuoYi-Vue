@@ -24,6 +24,6 @@ public class DirectSender {
         String content = i+":hello!"+date;
         CorrelationData correlationData = new CorrelationData(UUID.randomUUID().toString());
         LOG.info("class:{},message:{}","DirectSender",content);
-        this.rabbitTemplate.convertAndSend(QueueEnum.QUEUE_ORDER_CANCEL.getExchange(),QueueEnum.QUEUE_ORDER_CANCEL.getRouteKey(),content,correlationData);
+        rabbitTemplate.convertAndSend(QueueEnum.QUEUE_ORDER_CANCEL.getExchange(),QueueEnum.QUEUE_ORDER_CANCEL.getRouteKey(),content,correlationData);
     }
 }
