@@ -2,6 +2,7 @@ package org.dromara.common.mq.config;
 
 import jakarta.annotation.Resource;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.dromara.common.mq.enums.QueueEnum;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -18,6 +19,7 @@ import org.springframework.context.annotation.Configuration;
  */
 @Configuration
 @EnableRabbit
+@Slf4j
 public class RabbitMQConfig {
 
     @Resource
@@ -26,26 +28,24 @@ public class RabbitMQConfig {
     @Bean
     //@Primary
     public AmqpTemplate amqpTemplate(){
-        Logger LOG = LoggerFactory.getLogger(AmqpTemplate.class);
         //使用jackson 消息转换器(发送对象时候才开启)
 //        rabbitTemplate.setMessageConverter(new Jackson2JsonMessageConverter());
         // 设置编码
         rabbitTemplate.setEncoding("UTF-8");
         // 开启消息退回
         rabbitTemplate.setMandatory(true);
-        // 开启事务
-        rabbitTemplate.setChannelTransacted(true);
-        // 开启returncallback    yml 需要配置publisher-returns: true
-//        rabbitTemplate.setReturnCallback(((message,  replyCode, replyText, exchange, routingKey) -> {
-//            String correlationId = message.getMessageProperties().getCorrelationId();
-//            LOG.info("消息：{} 发送失败, 应答码：{} 原因：{} 交换机: {}  路由键: {}", correlationId, replyCode, replyText, exchange, routingKey);
-//        }));
+
+        // 开启消息回退log    yml 需要配置publisher-returns: true
+        rabbitTemplate.setReturnsCallback((returnedMessage)->{
+            log.info("消息：{} 发送失败, 应答码：{} 原因：{} 交换机: {}  路由键: {}", returnedMessage.getMessage().getMessageProperties().getClusterId(), returnedMessage.getReplyCode(), returnedMessage.getReplyText(), returnedMessage.getExchange(), returnedMessage.getRoutingKey());
+        });
+
         //开启消息确认  yml 需要配置   publisher-returns: true
         rabbitTemplate.setConfirmCallback(((correlationData, ack, cause) ->{
             if (ack) {
-                LOG.info("消息发送到交换机成功,correlationId:{}",correlationData.getId());
+                log.info("消息发送到交换机成功,correlationId:{}",correlationData.getId());
             } else {
-                LOG.info("消息发送到交换机失败,原因:{}",cause);
+                log.info("消息发送到交换机失败,原因:{}",cause);
             }
         } ));
         return rabbitTemplate;
