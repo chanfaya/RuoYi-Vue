@@ -1,13 +1,11 @@
 package org.dromara.test;
 
 import jakarta.annotation.Resource;
-import org.dromara.common.core.config.RuoYiConfig;
-import org.dromara.common.mq.product.DirectSender;
+import org.dromara.common.mq.product.DirectProducter;
+import org.dromara.common.mq.product.FanoutProducer;
+import org.dromara.common.mq.product.SimpleProducer;
 import org.junit.jupiter.api.*;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-
-import java.util.concurrent.TimeUnit;
 
 /**
  * 单元测试案例
@@ -19,17 +17,22 @@ import java.util.concurrent.TimeUnit;
 public class DemoUnitTest {
 
     @Resource
-    private DirectSender directSender;
+    private SimpleProducer simpleProducer;
+
+//    @Resource
+//    private FanoutProducer fanoutProducer;
+
+    @Resource
+    private DirectProducter directProducter;
 
     @DisplayName("测试 @SpringBootTest @Test @DisplayName 注解")
     @Test
     public void testTest() {
-
         // 这里是线程要执行的代码
-        for (int i = 1; i < 20000; i++) {
-            directSender.send(i);
+//        simpleProducer.send(1);
 
-        }
+        directProducter.send(1);
+
     }
 
 }

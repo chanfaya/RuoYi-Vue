@@ -29,8 +29,12 @@ public class RabbitMQConfig {
         Logger LOG = LoggerFactory.getLogger(AmqpTemplate.class);
         //使用jackson 消息转换器(发送对象时候才开启)
 //        rabbitTemplate.setMessageConverter(new Jackson2JsonMessageConverter());
+        // 设置编码
         rabbitTemplate.setEncoding("UTF-8");
+        // 开启消息退回
         rabbitTemplate.setMandatory(true);
+        // 开启事务
+        rabbitTemplate.setChannelTransacted(true);
         // 开启returncallback    yml 需要配置publisher-returns: true
 //        rabbitTemplate.setReturnCallback(((message,  replyCode, replyText, exchange, routingKey) -> {
 //            String correlationId = message.getMessageProperties().getCorrelationId();
@@ -48,53 +52,134 @@ public class RabbitMQConfig {
     }
 
     /**
-     * 声明直连交换机 支持持久化.
+     * 简单模式-工作队列模式
+     * @return
+     */
+    @Bean("simpleQueue")
+    public Queue queue(){
+        return new Queue(QueueEnum.QUEUE_ORDER_CANCEL_SIMPLE.getName(),true,false,false);
+    }
+
+    /**
+     * 路由模式，交换机
      * @return the exchange
      */
-    @Bean("orderDirect")
+    @Bean("directDirect")
     public DirectExchange  directExchange() {
-        return ExchangeBuilder.directExchange(QueueEnum.QUEUE_ORDER_CANCEL.getExchange()).durable(true).build();
+        return ExchangeBuilder.directExchange(QueueEnum.QUEUE_ORDER_DIRECT.getExchange()).durable(true).build();
     }
 
-    @Bean("orderQueue")
+    /**
+     * 路由模式，队列
+     * @return
+     */
+    @Bean("directQueue")
     public Queue directQueue(){
-        return new Queue(QueueEnum.QUEUE_ORDER_CANCEL.getName(), true, false, false);
+        return new Queue(QueueEnum.QUEUE_ORDER_DIRECT.getName(), true, false, false);
     }
 
+    /**
+     * 路由模式交换机与队列绑定
+     * @param directDirect
+     * @param directQueue
+     * @return
+     */
     @Bean
-    public Binding directBinding(DirectExchange orderDirect,Queue orderQueue){
+    public Binding directBinding(DirectExchange directDirect,Queue directQueue){
         return BindingBuilder
-            .bind(orderQueue)
-            .to(orderDirect)
-            .with(QueueEnum.QUEUE_ORDER_CANCEL.getRouteKey());
+            .bind(directQueue)
+            .to(directDirect)
+            .with(QueueEnum.QUEUE_ORDER_DIRECT.getRouteKey());
     }
 
-    // 订阅模式
+    /**
+     * 广播模式，队列A
+     * @return
+     */
     @Bean("fanoutQueueA")
     public Queue fanoutExchangeQueueA(){
-        return new Queue(QueueEnum.QUEUE_ORDER_FANOUTA.getName(), true, false, false);
+        return new Queue(QueueEnum.QUEUE_ORDER_FANOUTA.getName(), true, false, true);
     }
 
+    /**
+     * 广播模式，队列B
+     * @return
+     */
     @Bean("fanoutQueueB")
     public Queue fanoutExchangeQueueB(){
-        return new Queue(QueueEnum.QUEUE_ORDER_FANOUTB.getName(), true, false, false);
+        return new Queue(QueueEnum.QUEUE_ORDER_FANOUTB.getName(), true, false, true);
     }
 
-    @Bean
+    /**
+     * 广播模式，交换机
+     * @return
+     */
+    @Bean("fanoutExchange")
     public FanoutExchange rabbitmqDemoFanoutExchange() {
         //创建FanoutExchange类型交换机
         return new FanoutExchange(QueueEnum.QUEUE_ORDER_FANOUTA.getExchange(), true, false);
     }
 
+    /**
+     * 广播模式，交换机与队列A绑定
+     * @param fanoutExchange
+     * @param fanoutQueueA
+     * @return
+     */
     @Bean
     public Binding bindFanoutA(FanoutExchange fanoutExchange, Queue fanoutQueueA) {
         //队列A绑定到FanoutExchange交换机
         return BindingBuilder.bind(fanoutQueueA).to(fanoutExchange);
     }
 
+    /**
+     * 广播模式，交换机与队列B绑定
+     * @param fanoutExchange
+     * @param fanoutQueueB
+     * @return
+     */
     @Bean
     public Binding bindFanoutB(FanoutExchange fanoutExchange, Queue fanoutQueueB) {
         //队列B绑定到FanoutExchange交换机
         return BindingBuilder.bind(fanoutQueueB).to(fanoutExchange);
+    }
+
+    /**
+     * 通配符模式，队列
+     * @return
+     */
+    @Bean("topicQueuqA")
+    public Queue topicQueuqA() {
+        return new Queue(QueueEnum.QUEUE_ORDER_TOPICA.getName(),true,false,false);
+    }
+
+    @Bean("topicQueuqB")
+    public Queue topicQueuqB() {
+        return new Queue(QueueEnum.QUEUE_ORDER_TOPICB.getName(),true,false,false);
+    }
+
+    /**
+     * 通配符模式，交换机
+     * @return
+     */
+    @Bean("topicExchange")
+    public TopicExchange topicExchange() {
+        return new TopicExchange(QueueEnum.QUEUE_ORDER_TOPICA.getExchange(), true, false);
+    }
+
+    /**
+     * 通配符模式，队列与交换机绑定
+     * @param topicExchange
+     * @param topicQueuqA
+     * @return
+     */
+    @Bean
+    public Binding bindTopicA(TopicExchange topicExchange, Queue topicQueuqA) {
+        return BindingBuilder.bind(topicQueuqA).to(topicExchange).with(QueueEnum.QUEUE_ORDER_TOPICA.getRouteKey());
+    }
+
+    @Bean
+    public Binding bindTopicB(TopicExchange topicExchange, Queue topicQueuqB) {
+        return BindingBuilder.bind(topicQueuqB).to(topicExchange).with(QueueEnum.QUEUE_ORDER_TOPICB.getRouteKey());
     }
 }

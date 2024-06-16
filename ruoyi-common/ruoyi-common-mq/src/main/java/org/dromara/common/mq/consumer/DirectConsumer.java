@@ -1,19 +1,21 @@
 package org.dromara.common.mq.consumer;
 
-import org.dromara.common.mq.enums.QueueEnum;
+import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.amqp.rabbit.annotation.RabbitHandler;
 import org.springframework.amqp.rabbit.annotation.RabbitListener;
 import org.springframework.stereotype.Component;
 
+/**
+ * 路由模式消费者
+ */
 @Component
-@RabbitListener(queues = "mall.order.cancel")
-public class DirectReceiver {
-    Logger LOG = LoggerFactory.getLogger(DirectReceiver.class);
+@Slf4j
+public class DirectConsumer {
 
-    @RabbitHandler
+    @RabbitListener(queues = "mall.order.direct")
     public void receiverMsg(String msg){
-        LOG.info("class:{},message:{}","DirectReceiver",msg);
+        log.info("class:{},message:{}","DirectReceiver",msg);
     }
 }
