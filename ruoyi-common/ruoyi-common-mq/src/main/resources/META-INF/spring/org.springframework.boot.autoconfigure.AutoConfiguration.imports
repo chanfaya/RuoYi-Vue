@@ -1,2 +1,1 @@
-org.dromara.common.redis.config.RedisConfig
-org.dromara.common.redis.config.CacheConfig
+org.dromara.common.mq.config.RabbitMQConfig
