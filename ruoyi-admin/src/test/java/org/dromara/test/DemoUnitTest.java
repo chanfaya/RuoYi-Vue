@@ -19,8 +19,8 @@ public class DemoUnitTest {
     @Resource
     private SimpleProducer simpleProducer;
 
-//    @Resource
-//    private FanoutProducer fanoutProducer;
+    @Resource
+    private FanoutProducer fanoutProducer;
 
     @Resource
     private DirectProducter directProducter;
@@ -31,7 +31,7 @@ public class DemoUnitTest {
         // 这里是线程要执行的代码
 //        simpleProducer.send(1);
 
-        directProducter.send(1);
+        fanoutProducer.send(1);
 
     }
 
